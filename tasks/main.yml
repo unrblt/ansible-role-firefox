@@ -1,0 +1,19 @@
+---
+- name: ensure packages are installed
+  apt: name={{ item }} state={{ firefox_pkg_state }} update_cache=yes cache_valid_time=3600
+  with_items: "{{ firefox_packages }}"
+
+- name: create profiles
+  firefox_profile: name={{ item.name }} state=present
+  become: no
+  with_items: "{{ firefox_profiles }}"
+
+- name: install extensions
+  firefox_addon:
+    uri: "{{ item.1 }}"
+    state: present
+    profile: "{{ item.0.name }}"
+  become: no
+  with_subelements:
+    - "{{ firefox_profiles }}"
+    - extensions

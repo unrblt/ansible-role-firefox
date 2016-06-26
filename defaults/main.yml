@@ -1,2 +1,13 @@
 ---
 firefox_home: ~/.mozilla/firefox
+firefox_pkg_state: latest
+firefox_packages:
+  - firefox
+  - firefox-locale-en
+  - firefox-locale-es
+firefox_profiles: []
+#  - name: alice
+#    extensions:
+#      - https://addons.mozilla.org/firefox/downloads/latest/random-agent-spoofer/addon-473878-latest.xpi?src=ss
+#  - name: bob
+#    extensions: []
