@@ -12,12 +12,14 @@ import xmltodict
 import requests
 
 class FirefoxExtension:
-    def __init__(self, uri):
+    def __init__(self, uri, profile_path):
         self.uri = uri
+        self.profile_path = profile_path
         self.filename = urlsplit(self.uri).path.split('/')[-1]
         self.download_path = os.path.join(mkdtemp(), self.filename)
         self._download()
         self._parse_rdf()
+        self.destination = os.path.join(profile_path, 'extensions', '%s.xpi' % self.id)
 
     def _download(self):
         r = requests.get(self.uri, stream=True)
@@ -31,19 +33,20 @@ class FirefoxExtension:
         self.rdf = xmltodict.parse(xpi.open('install.rdf').read())
         self.id = self.rdf['RDF']['Description']['em:id']
 
-    def install(self, profile_path):
-        path = os.path.join(profile_path, 'extensions')
+    def is_installed(self):
+        return os.path.isfile(self.destination)
+
+    def install(self):
+        path = os.path.dirname(self.destination)
         try:
             os.makedirs(path, 0700)
         except OSError:
             if not os.path.isdir(path):
                 raise
-        destination = os.path.join(path, '%s.xpi' % self.id)
-        shutil.move(self.download_path, destination)
+        shutil.move(self.download_path, self.destination)
 
-    def uninstall(self, profile_path):
-        destination = os.path.join(profile_path, 'extensions', '%s.xpi' % self.id)
-        os.remove(destination)
+    def uninstall(self):
+        os.remove(self.destination)
 
 
 class FirefoxProfiles:
@@ -131,18 +134,18 @@ def main():
     if profile is None:
         module.fail_json(msg='Profile %s not found' % module.params['profile'])
 
-    addon = FirefoxExtension(module.params['uri'])
     path = profiles.get_path(module.params['profile'])
+    addon = FirefoxExtension(module.params['uri'], path)
     changed = False
     result = None
 
     try:
-        if module.params['state'] == 'present':
-            addon.install(path)
+        if module.params['state'] == 'present' and not addon.is_installed():
+            addon.install()
             changed = True
             result = {'id': addon.id, 'uri': addon.uri, 'name': addon.filename}
-        elif module.params['state'] == 'absent':
-            addon.uninstall(path)
+        elif module.params['state'] == 'absent' and addon.is_installed():
+            addon.uninstall()
             changed = True
         module.exit_json(changed=changed, meta=result)
     except Exception as e:
