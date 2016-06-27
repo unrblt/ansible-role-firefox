@@ -29,12 +29,12 @@ Packages to install.
 firefox_profiles: []
 #  - name: alice
 #    extensions:
-#      - https://addons.mozilla.org/firefox/downloads/latest/random-agent-spoofer/addon-473878-latest.xpi?src=ss
+#      - random-agent-spoofer
 #  - name: bob
 #    extensions: []
 ```
 
-List of profiles with extensions. `extensions` is a list of xpi files urls to
+List of profiles with extensions. `extensions` is a list of extension names to
 download and it needs to be defined (use an empty list if you don't want to
 install any extensions).
 

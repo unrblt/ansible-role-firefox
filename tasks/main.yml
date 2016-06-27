@@ -10,7 +10,7 @@
 
 - name: install extensions
   firefox_addon:
-    uri: "{{ item.1 }}"
+    name: "{{ item.1 }}"
     state: present
     profile: "{{ item.0.name }}"
   become: no

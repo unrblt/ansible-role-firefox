@@ -8,6 +8,6 @@ firefox_packages:
 firefox_profiles: []
 #  - name: alice
 #    extensions:
-#      - https://addons.mozilla.org/firefox/downloads/latest/random-agent-spoofer/addon-473878-latest.xpi?src=ss
+#      - random-agent-spoofer
 #  - name: bob
 #    extensions: []
