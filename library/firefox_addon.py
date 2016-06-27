@@ -1,5 +1,8 @@
 #!/usr/bin/python
 
+# TODO: usar api de firefox: https://services.addons.mozilla.org/es/firefox/api/1.5/addon/carbon-pro
+# TODO: instalar temas
+
 from ansible.module_utils.basic import *
 from tempfile import mkdtemp
 from urlparse import urlsplit
@@ -68,28 +71,6 @@ class FirefoxProfiles:
                 profile = dict(self.config.items(section))
                 self.sections[profile['Name']] = section
 
-    def write(self):
-        # Reorder the current sections, otherwise firefox deletes them on start.
-        new = ConfigParser.ConfigParser()
-        new.optionxform = str
-        new.add_section('General')
-        for item in self.config.items('General'):
-            new.set('General', item[0], item[1])
-
-        index = 0
-        for section in self.sections.values():
-            new_section = 'Profile%d' % index
-            new.add_section(new_section)
-            for item in self.config.items(section):
-                new.set(new_section, item[0], item[1])
-            index += 1
-
-        with open(self.profiles_ini, 'wb') as config_file:
-            new.write(FirefoxConfigWrapper(config_file))
-
-        # Update state with the new file.
-        self.read()
-
     def get(self, name):
         if name in self.sections:
             return dict(self.config.items(self.sections[name]))
@@ -99,21 +80,6 @@ class FirefoxProfiles:
         if (bool(profile['IsRelative'])):
             return os.path.join(self.path, profile['Path'])
         return profile['Path']
-
-    def delete(self, name):
-        profile = self.get(name)
-        if profile is not None:
-            shutil.rmtree(self.get_path(name))
-            self.sections.pop(name)
-            self.write()
-
-    def create(self, name):
-        command = 'firefox -no-remote -CreateProfile %s' % name
-        p = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        (stdout, stderr) = p.communicate()
-        if p.returncode != 0:
-            raise Exception(stderr)
-        self.read()
 
 
 def main():
