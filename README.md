@@ -1,12 +1,14 @@
 # Firefox
 
-Installs firefox on Ubuntu systems and optionally creates profiles with extensions.
-
+Installs firefox and optionally creates profiles with extensions.
 Extensions are installed but need to be manually enabled from firefox.
+It's only been tested in Ubuntu, but should work on other systems as long as
+you set the right packages in `firefox_packages`.
 
 ## Requirements
 
-[xmltodict][0] and [requests][1] are needed to install extensions.
+[xmltodict][0] and [requests][1] are required on the remote host to install
+extensions.
 
 ## Role Variables
 
@@ -40,8 +42,6 @@ install any extensions).
 
 ## Example Playbook
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
-
 ```yaml
 - hosts: localhost
 
@@ -49,7 +49,9 @@ Including an example of how to use your role (for instance, with variables passe
     firefox_profiles:
       - name: alice
         extensions:
-          - https://addons.mozilla.org/firefox/downloads/latest/random-agent-spoofer/addon-473878-latest.xpi
+          - random-agent-spoofer
+          - https-everywhere
+          - noscript
       - name: bob
         extensions: []
 
