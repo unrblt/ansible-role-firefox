@@ -7,6 +7,7 @@
   firefox_profile: name={{ item.name }} state=present
   become: no
   with_items: "{{ firefox_profiles }}"
+  register: profiles
 
 - name: install extensions
   firefox_addon:
@@ -17,3 +18,11 @@
   with_subelements:
     - "{{ firefox_profiles }}"
     - extensions
+
+- name: set preferences
+  template:
+    src: templates/user.js.j2
+    dest: "{{item.profile_path }}/user.js"
+  with_items: "{{ profiles.results }}"
+  when: firefox_preferences[item.profile_name] is defined
+  become: no

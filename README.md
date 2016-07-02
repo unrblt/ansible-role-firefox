@@ -40,6 +40,18 @@ List of profiles with extensions. `extensions` is a list of extension names to
 download and it needs to be defined (use an empty list if you don't want to
 install any extensions).
 
+```yaml
+firefox_preferences: {}
+#  alice:
+#    browser.safebrowsing.enabled: 'false'
+#    browser.safebrowsing.malware.enabled: 'false'
+```
+
+Dictionary with preference and value (keyed by profile name). This preferences
+are written to a `user.js` file in the profile directory which means any change
+you make to that setting in the options and preference dialogs or via
+`about:config` will be lost when you restart firefox.
+
 ## Example Playbook
 
 ```yaml

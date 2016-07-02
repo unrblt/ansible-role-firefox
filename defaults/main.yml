@@ -5,9 +5,15 @@ firefox_packages:
   - firefox
   - firefox-locale-en
   - firefox-locale-es
+
 firefox_profiles: []
 #  - name: alice
 #    extensions:
 #      - random-agent-spoofer
 #  - name: bob
 #    extensions: []
+
+firefox_preferences: {}
+#  alice:
+#    browser.safebrowsing.enabled: 'false'
+#    browser.safebrowsing.malware.enabled: 'false'
