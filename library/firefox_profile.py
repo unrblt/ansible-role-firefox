@@ -68,9 +68,10 @@ class FirefoxProfiles:
 
     def get_path(self, name):
         profile = self.get(name)
-        if (bool(profile['IsRelative'])):
-            return os.path.join(self.path, profile['Path'])
-        return profile['Path']
+        if profile is not None:
+            if (bool(profile['IsRelative'])):
+                return os.path.join(self.path, profile['Path'])
+            return profile['Path']
 
     def delete(self, name):
         profile = self.get(name)
@@ -102,16 +103,16 @@ def main():
     module = AnsibleModule(argument_spec=fields)
     profiles = FirefoxProfiles(module.params['path'])
     name = module.params['name']
+    path = profiles.get_path(name)
     changed = False
-    result = None
     if module.params['state'] == 'present' and profiles.get(name) is None:
         profiles.create(name)
         changed = True
-        result = {'profile': profiles.get(name)}
+        path = profiles.get_path(name)
     elif module.params['state'] == 'absent' and profiles.get(name) is not None:
         profiles.delete(name)
         changed = True
-    module.exit_json(changed=changed, meta=result)
+    module.exit_json(changed=changed, profile_name=name, profile_path=path)
 
 
 if __name__ == '__main__':
