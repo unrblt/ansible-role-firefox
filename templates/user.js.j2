@@ -1,3 +1,4 @@
-{% for pref, value in firefox_preferences[item.profile_name].iteritems() %}
+{%- set preferences = firefox_profile_preferences[item.profile_name] | default({}) | combine(firefox_preferences| default({})) %}
+{% for pref, value in preferences.iteritems() %}
 user_pref("{{ pref }}", {{ value }});
 {% endfor %}

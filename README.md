@@ -42,15 +42,23 @@ install any extensions).
 
 ```yaml
 firefox_preferences: {}
+#  browser.safebrowsing.enabled: 'false'
+```
+
+Dictionary with preference and value. This preferences are written to a `user.js`
+file in the profile directory which means any change you make to that setting in
+the options and preference dialogs or via `about:config` will be lost when you
+restart firefox.
+
+```yaml
+firefox_profile_preferences: {}
 #  alice:
 #    browser.safebrowsing.enabled: 'false'
 #    browser.safebrowsing.malware.enabled: 'false'
 ```
 
 Dictionary with preference and value (keyed by profile name). This preferences
-are written to a `user.js` file in the profile directory which means any change
-you make to that setting in the options and preference dialogs or via
-`about:config` will be lost when you restart firefox.
+will be merged with `firefox_preferences` for every profile.
 
 ## Example Playbook
 
