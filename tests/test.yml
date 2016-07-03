@@ -1,0 +1,20 @@
+- hosts: localhost
+  become: yes
+
+  vars:
+    firefox_profiles:
+      - name: alice
+        extensions:
+          - random-agent-spoofer
+      - name: bob
+        extensions: []
+    firefox_preferences:
+      browser.safebrowsing.enabled: 'true'
+      geo.ip: 'false'
+    firefox_profile_preferences:
+      alice:
+        browser.safebrowsing.enabled: 'false'
+        browser.safebrowsing.malware.enabled: 'false'
+
+  roles:
+    - firefox
