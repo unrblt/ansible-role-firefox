@@ -1,4 +1,4 @@
-# Firefox
+# Ansible Role: Firefox
 
 Installs firefox and optionally creates profiles with extensions.
 Extensions are installed but need to be manually enabled from firefox.
