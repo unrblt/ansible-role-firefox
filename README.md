@@ -48,7 +48,7 @@ firefox_preferences: {}
 Dictionary with preference and value. This preferences are written to a `user.js`
 file in the profile directory which means any change you make to that setting in
 the options and preference dialogs or via `about:config` will be lost when you
-restart firefox.
+restart firefox. This settings apply to every profile.
 
 ```yaml
 firefox_profile_preferences: {}
@@ -58,7 +58,7 @@ firefox_profile_preferences: {}
 ```
 
 Dictionary with preference and value (keyed by profile name). This preferences
-will be merged with `firefox_preferences` for every profile.
+will be merged with `firefox_preferences`.
 
 ## Example Playbook
 
@@ -74,6 +74,14 @@ will be merged with `firefox_preferences` for every profile.
           - noscript
       - name: bob
         extensions: []
+    firefox_preferences:
+      browser.safebrowsing.enabled: 'true'
+      geo.ip: 'false'
+      browser.search.defaultenginename: "'DuckDuckGo'"
+    firefox_profile_preferences:
+      alice:
+        browser.safebrowsing.enabled: 'false'
+        browser.safebrowsing.malware.enabled: 'false'
 
   pre_tasks:
     - name: install role requirements
